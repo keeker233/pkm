@@ -106,6 +106,19 @@ install_docker() {
         fi
     fi
     docker pull wiznote/wizserver
+    docker pull mysql:oracle
+    docker pull wordpress
+    docker pull neo4j
+    docker pull mediawiki
+    docker pull calibre
+    docker pull onenav
+    docker run -dit --name=db --restart=always -v /opt/mysqldata:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123 -e MYSQL_DATABASE=wordpress mysql:oracle
+    docker run --name wiz --restart=always -it -d -v  /opt/wizdata:/wiz/storage -v  /etc/localtime:/etc/localtime -p 8081:80 -p 9269:9269/udp  wiznote/wizserver
+    docker run -dit --name=blog --restart=always -v /opt/blog:/var/www/html -p 8082:80 --link=db:mysql wordpress
+    docker run -d --name=image_db -p 7474:7474 -p 7687:7687 --restart=always -v /opt/neo4j/data:/data -v /opt/neo4j/logs:/logs -v /opt/neo4j/conf:/var/lib/neo4j/conf -v /opt/neo4j/import:/var/lib/neo4j/import --env NEO4J_AUTH=neo4j/password neo4j
+    docker run -itd --name wiki -p 8083:80 -v /opt/mediawiki/html:/var/www/html --restart=always mediawiki
+    docker run -d --name=calibre -p 8084:8083 --restart=always -v /opt/calibre/config:/config -v /opt/media/ivy/books:/books linuxserver/calibre-web
+    docker run -itd --name="onenav" -p 8085:80 -e USER='admin' -e PASSWORD='admin' --restart=always -v  /opt/onenav:/data/wwwroot/default/data  helloz/onenav
 }
 
 #Install Depends
@@ -138,6 +151,15 @@ install_depends() {
 create_directory() {
     ((EUID)) && sudo_cmd="sudo"
     $sudo_cmd mkdir -p $PKM_path
+    $sudo_cmd mkdir -p /opt/mysqldata
+    $sudo_cmd mkdir -p  /opt/wizdata
+    $sudo_cmd mkdir -p  /opt/blog
+    $sudo_cmd mkdir -p  /opt/neo4j
+    $sudo_cmd mkdir -p  /opt/mediawiki
+    $sudo_cmd mkdir -p  /opt/calibre
+    $sudo_cmd mkdir -p  /opt/media
+    $sudo_cmd mkdir -p  /opt/onenav
+    
 }
 
 
