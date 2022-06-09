@@ -105,7 +105,7 @@ install_docker() {
             fi
         fi
     fi
-    docker pull wiznote
+    docker pull wiznote/wizserver
 }
 
 #Install Depends
