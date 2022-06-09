@@ -18,7 +18,7 @@ readonly disk_size_gb=$((${disk_size_bytes} / 1024 / 1024))
 readonly pkm_bin="pkm"
 readonly pkm_tmp_folder="pkm"
 
-port=80
+port=1001
 install_path="/usr/local/bin"
 service_path=/usr/lib/systemd/system/pkm.service
 if [ ! -d "/usr/lib/systemd/system" ]; then
@@ -105,6 +105,7 @@ install_docker() {
             fi
         fi
     fi
+    docker pull wiznote
 }
 
 #Install Depends
